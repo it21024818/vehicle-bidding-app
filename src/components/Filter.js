@@ -16,7 +16,7 @@ const Filter = ({ vehicles, filteredVehicles, brand, filterVehicles }) => {
               filterVehicles(vehicles, event.target.value);
             }}
           >
-            <option value="">ALL</option>
+            <option value="">Select Brand</option>
             <option value="volkswagen">Volkswagen</option>
             <option value="audi">Audi</option>
             <option value="ford">Ford</option>
