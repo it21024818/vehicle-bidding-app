@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import { Provider } from "react-redux";
+import Vehicles from "./components/Vehicles";
+import Filter from "./components/Filter";
+import Basket from "./components/Basket";
+import store from "./store";
+import "./App.css";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <div className="container">
+          <h1>Vehicle Bidding Application</h1>
+          <hr />
+          <div className="row">
+            <div className="col-md-9">
+              <Filter />
+              <hr />
+              <Vehicles />
+            </div>
+            <div className="col-md-3">
+              <Basket />
+            </div>
+          </div>
+        </div>
+      </Provider>
+    );
+  }
 }
 
 export default App;
