@@ -3,14 +3,20 @@ import { connect } from "react-redux";
 import { addToBid } from "../actions/bidActions";
 
 const Basket = ({ bidItems, addToBid }) => {
-  const handleCheckout = () => {
-    alert("Todo: Implement checkout page.");
-  };
+
+  // fetch("http://157.245.61.32:7979/vehicles").then(res => res.json())
+  // .then(data => this.setState({
+  //   vehicles: data,
+  //   filteredVehicles: data
+  // }))
+  // if(localStorage.getItem('bidItems')){
+  //   this.setState({bidItems: JSON.parse(localStorage.getItem('bidItems'))})
+  // }
 
   return (
     <div className="alert alert-info">
       {bidItems.length === 0 ? (
-        "Basket is empty"
+        "No biddings"
       ) : (
         <div>
           You have {bidItems.length} items in the basket. <hr />
@@ -29,14 +35,11 @@ const Basket = ({ bidItems, addToBid }) => {
           </ul>
 
           <b>
-            Sum:{" "}
+            Total:{" "}
             {/* {util.formatCurrency(
               bidItems.reduce((a, c) => a + c.price * c.count, 0)
             )} */}
           </b>
-          <button onClick={handleCheckout} className="btn btn-primary">
-            checkout
-          </button>
         </div>
       )}
     </div>

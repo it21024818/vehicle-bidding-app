@@ -10,42 +10,50 @@ import Button from "@material-ui/core/Button";
 import { TextField } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import Snackbar from "@material-ui/core/Snackbar";
+import Grid from "@material-ui/core/Grid";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-const Vehicles = ({ vehicles, bidItems, fetchVehicles, addToBid, handleAddToBid }) => {
+const Vehicles = ({ vehicles, bidItems, fetchVehicles, addToBid }) => {
   useEffect(() => {
     fetchVehicles();
   }, [fetchVehicles]);
 
-  const [inputValue, setInputValue] = useState("");
+  const [inputValues, setInputValues] = useState({});
   const [error, setError] = useState(null);
-
-  const handleInputChange = (e) => {
+  
+  const handleInputChange = (e, vehicleId) => {
     const { value } = e.target;
     const onlyNums = value.replace(/[^0-9]/g, "");
-    setInputValue(onlyNums);
+    setInputValues((prevInputValues) => ({
+      ...prevInputValues,
+      [vehicleId]: onlyNums,
+    }));
   };
 
   const handleSnackbarClose = () => {
     setError(null);
   };
 
-  const handleAddToBidWithValidation = (e, vehicle) => {
+  const handleAddToBid = (e, vehicle) => {
     e.preventDefault();
     const minValue = vehicle.details.price;
+    const inputValue = inputValues[vehicle.id] || "";
     if (parseInt(inputValue) < minValue) {
       setError(`Bid amount should be greater than or equal to LKR ${minValue}`);
     } else {
-      handleAddToBid(e, vehicle);
-      setInputValue("");
+      addToBid(vehicle, inputValue);
+      setInputValues((prevInputValues) => ({
+        ...prevInputValues,
+        [vehicle.id]: "",
+      }));
     }
   };
 
   const vehicleItems = vehicles.map((vehicle) => (
-    <div className="col-md-4" key={vehicle.id}>
+    <Grid item xs={12} sm={6} md={3} key={vehicle.id}>
       <Card>
         <CardMedia component="img" alt={vehicle.name} height="200" image={vehicle.details.image} name={vehicle.name} />
         <CardContent>
@@ -55,36 +63,35 @@ const Vehicles = ({ vehicles, bidItems, fetchVehicles, addToBid, handleAddToBid 
           <Typography gutterBottom variant="h6" component="h2">
             {vehicle.details.description}
           </Typography>
-          {/* <b>{util.formatCurrency(vehicle.price)}</b> */}
-          <div>
+          <div style={{ display: "flex", alignItems: "center" }}>
             <div>
               <TextField
                 required
-                value={inputValue}
-                onChange={handleInputChange}
+                value={inputValues[vehicle.id] || ""}
+                onChange={(e) => handleInputChange(e, vehicle.id)}
                 inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
               />
             </div>
-            <div>LKR</div>
+            <div style={{ marginLeft: "5px" }}>LKR</div>
           </div>
-
-          <Button variant="contained" color="primary" onClick={(e) => handleAddToBidWithValidation(e, vehicle)} disabled={!inputValue.trim()}>
+          <br></br>
+          <Button variant="contained" color="primary" onClick={(e) => handleAddToBid(e, vehicle)} disabled={!inputValues[vehicle.id]?.trim()}>
             submit
           </Button>
         </CardContent>
       </Card>
-    </div>
+    </Grid>
   ));
 
   return (
-    <div className="row">
+    <Grid container spacing={3}>
       {vehicleItems}
       <Snackbar open={error !== null} autoHideDuration={3000} onClose={handleSnackbarClose}>
         <Alert onClose={handleSnackbarClose} severity="error">
           {error}
         </Alert>
       </Snackbar>
-    </div>
+    </Grid>
   );
 };
 

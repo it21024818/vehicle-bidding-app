@@ -1,7 +1,10 @@
 import { ADD_TO_BID } from "./types";
 
-export const addToBid = (items, vehicle) => (dispatch) => {
-  const bidItems = items.slice();
+export const addToBid = (items, vehicle, bidAmount) => (dispatch) => {
+  let bidItems = [];
+  if (Array.isArray(items)) {
+    bidItems = items.slice();
+  }
   let vehicleAlreadyInBid = false;
 
   bidItems.forEach((cp) => {
@@ -15,5 +18,5 @@ export const addToBid = (items, vehicle) => (dispatch) => {
     bidItems.push({ ...vehicle, count: 1 });
   }
   localStorage.setItem("bidItems", JSON.stringify(bidItems));
-  dispatch({ type: ADD_TO_BID, payload: { bidItems } });
+  dispatch({ type: ADD_TO_BID, payload: { bidItems, bidAmount } });
 };
